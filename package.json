@@ -1,0 +1,17 @@
+{
+  "name": "gnr",
+  "version": "1.0.0",
+  "description": "Galaxy News Radio",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jacob Evans",
+  "license": "Apache License, Version 2.0",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "ejs": "^2.4.1",
+    "express": "^4.13.4",
+    "path": "^0.12.7"
+  }
+}

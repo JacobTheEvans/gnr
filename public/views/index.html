@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Galaxy News Radio</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet" type="text/css">
+  <link href="/css/mdl.css" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
+  <script src="/js/mdl.js"></script>
+</head>
+<body ng-app="app">
+  <div ng-controller="mainController">
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+          <span class="mdl-layout-title l-only">GNR <i class="fa fa-bolt color-yellow"></i></span>
+          <div class="mdl-layout-spacer"></div>
+          <a class="navbar_link" href="">Playlists</a>
+          <a class="navbar_link" href="">Source Code</a>
+          <a class="navbar_link" href="">Author</a>
+          <span class="mdl-layout-title m-only">GNR <i class="fa fa-bolt color-yellow"></i></span>
+        </div>
+      </header>
+      <div class="mdl-layout__drawer">
+        <span class="mdl-layout-title">GNR <i class="fa fa-bolt color-yellow"></i></span>
+        <nav class="mdl-navigation">
+          <a class="mdl-navigation__link drawer_link" href="">Playlists</a>
+          <a class="mdl-navigation__link drawer_link" href="">Source Code</a>
+          <a class="mdl-navigation__link drawer_link" href="">Author</a>
+        </nav>
+      </div>
+      <main class="mdl-layout__content">
+        <div class="main">
+          <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--8-col mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+              <div class="player-box">
+                <youtube-video video-id="currentSong" player-width="'100%'" player-height="'340px'"></youtube-video>
+                <div class="control-box">
+                  <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab control_btn">
+                    <i class="material-icons">pause</i>
+                  </button>
+                  <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab control_btn">
+                    <i class="material-icons">skip_next</i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="mdl-cell mdl-cell--4-col mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+              <div class="news-box">
+                <div class="news-logo">
+                  News
+                </div>
+                <div class="news-items">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="/js/jquery.js"></script>
+  <script src="/js/angular.min.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script src="/js/angular-youtube-embed.js"></script>
+</body>
+</html>
