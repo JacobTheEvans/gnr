@@ -15,14 +15,18 @@
 </head>
 <body ng-app="app">
   <div ng-controller="mainController">
+    <div id="loading">
+      <img class="loading-image" src="/images/gears.gif">
+      <p class="color-blue">Loading content</p>
+    </div>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <header class="mdl-layout__header">
         <div class="mdl-layout__header-row">
           <span class="mdl-layout-title l-only">GNR <i class="fa fa-bolt color-yellow"></i></span>
           <div class="mdl-layout-spacer"></div>
           <a class="navbar_link" href="">Playlists</a>
-          <a class="navbar_link" href="">Source Code</a>
-          <a class="navbar_link" href="">Author</a>
+          <a class="navbar_link" href="https://github.com/JacobTheEvans/gnr" target="_blank">Source Code</a>
+          <a class="navbar_link" href="https://jacobtheevans.com" target="_blank">Author</a>
           <span class="mdl-layout-title m-only">GNR <i class="fa fa-bolt color-yellow"></i></span>
         </div>
       </header>
@@ -30,8 +34,8 @@
         <span class="mdl-layout-title">GNR <i class="fa fa-bolt color-yellow"></i></span>
         <nav class="mdl-navigation">
           <a class="mdl-navigation__link drawer_link" href="">Playlists</a>
-          <a class="mdl-navigation__link drawer_link" href="">Source Code</a>
-          <a class="mdl-navigation__link drawer_link" href="">Author</a>
+          <a class="mdl-navigation__link drawer_link" href="https://github.com/JacobTheEvans/gnr" target="_blank">Source Code</a>
+          <a class="mdl-navigation__link drawer_link" href="https://jacobtheevans.com" target="_blank">Author</a>
         </nav>
       </div>
       <main class="mdl-layout__content">
@@ -39,27 +43,58 @@
           <div class="mdl-grid">
             <div class="mdl-cell mdl-cell--8-col mdl-cell--12-col-tablet mdl-cell--12-col-phone">
               <div class="player-box">
-                <youtube-video video-id="currentSong" player-width="'100%'" player-height="'340px'"></youtube-video>
-                <div class="control-box">
-                  <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab control_btn">
-                    <i class="material-icons">pause</i>
-                  </button>
-                  <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab control_btn">
-                    <i class="material-icons">skip_next</i>
-                  </button>
+                <div class="mdl-grid">
+                  <div class="mdl-cell mdl-cell--2-col mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+                    <div class="personality-choice personality-choice-large">
+                      <div ng-click="">
+                        <img class="personality-btn" src="images/dog.png">
+                      </div>
+                      <div ng-click="">
+                        <img class="personality-btn" src="images/mr.png">
+                      </div>
+                      <div ng-click="">
+                        <img class="personality-btn" src="images/travis.png">
+                      </div>
+                    </div>
+                    <div class="personality-choice-mobile">
+                      <span ng-click="">
+                        <img class="personality-btn" src="images/dog.png">
+                      </span>
+                      <span ng-click="">
+                        <img class="personality-btn" src="images/mr.png">
+                      </span>
+                      <span ng-click="">
+                        <img class="personality-btn" src="images/travis.png">
+                      </span>
+                    </div>
+                  </div>
+                  <div class="mdl-cell mdl-cell--10-col mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+                    <youtube-video video-id="currentSong" player-width="'100%'" player-height="'340px'"></youtube-video>
+                    <div class="control-box">
+                      <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab control_btn">
+                        <i class="material-icons">pause</i>
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="mdl-cell mdl-cell--4-col mdl-cell--12-col-tablet mdl-cell--12-col-phone">
-              <div class="news-box">
+              <div class="news-box" ng-init="getNews()">
                 <div class="news-logo">
                   News
                 </div>
                 <div class="news-items">
+                  <div class="news-item" ng-repeat="item in newsItems | orderBy: 'points':true  track by $index">
+                    <a ng-href="{{item.url}}" target="_blank">{{item.title}}</a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+        <div class="sub-text">
+          <p>All music is from Bethesda Fallout games.<br>Buy the music <a href="http://store.bethsoft.com/itunes/" target="_blank">here</a> and buy the games <a href="https://www.fallout4.com/games" target="_blank">here</a>.</p>
         </div>
       </main>
     </div>

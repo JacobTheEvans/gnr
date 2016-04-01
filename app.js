@@ -1,9 +1,17 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 var path = require("path");
+var mongoose = require("mongoose");
+var hn = require("hacker-news-api");
 
 //base express app
 var app = express();
+
+//connect to mongoDB
+mongoose.connect("mongodb://localhost/gnr");
+
+//data schema
+var Post = require("./model.js").Post;
 
 //setup JSON requests
 app.use(bodyParser.urlencoded({ extended: false}));
@@ -17,8 +25,51 @@ app.set("views", __dirname + "/public/views");
 app.engine("html", require("ejs").renderFile);
 app.set("view engine", "ejs");
 
+var refreshCache = function() {
+  hn.story().since("past_24h").recent().top(function(error, data) {
+    if(error) {
+      console.log(error);
+    }
+    if(data) {
+      var newData = [];
+      for(var i = 0; i < data["hits"].length; i++) {
+        newData.push({"title": data["hits"][i].title, "url": data["hits"][i].url, "points": data["hits"][i].points});
+      }
+      for( var i = 0; i < newData.length; i++) {
+        var newPost = new Post(newData[i]);
+        newPost.save(function(err, result) {
+          if(err) {
+            console.log(err);
+          }
+        });
+      }
+    }
+  });
+};
+
+//init cache
+refreshCache();
+
+//setup interval for cache of hacker news posts
+setInterval(function(){
+  refreshCache();
+}, 1800000);
+
 app.get("/", function(req, res) {
   res.render("index.html");
+});
+
+app.get("/news", function(req, res) {
+  Post.find({}, function(err, data) {
+    if(err) {
+      res.status(500).send(err);
+    }
+    if(data) {
+      res.status(200).send(data.slice(0, 30));
+    } else {
+      res.status(404).send({pass: false, message: "No data found"});
+    }
+  });
 });
 
 app.listen(8080);

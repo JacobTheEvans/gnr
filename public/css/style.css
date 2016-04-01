@@ -6,6 +6,10 @@ p {
   font-size: 20px;
 }
 
+a {
+  text-decoration: none;
+}
+
 .mdl-layout__header {
   background-color: #404040 !important;
   color: white;
@@ -83,8 +87,32 @@ p {
 }
 
 .news-items {
+  padding-top: 5px;
+  height: 385px;
   overflow-x: hidden;
   overflow-y: scroll;
+  word-wrap: break-word;
+  padding-right: 5px;
+}
+
+.news-item {
+  width: 100%;
+  text-align: left;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+}
+
+.news-item a {
+  color: #9E9E9E;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.news-item a:hover {
+  text-decoration: underline;
 }
 
 .control-box {
@@ -102,12 +130,54 @@ p {
   margin-left: 7px;
   margin-right: 7px;
   color: white;
-  background-color: #477AB5;
+  background-color: #ffc107;
 }
 
 .control_btn:hover {
   color: white;
+  background-color: #477AB5;
+}
+
+.loading-image {
+  margin-top: 35vh;
+  margin-bottom: 20px;
+}
+
+.personality-choice {
+  width: 100%;
+  height: 400px;
+}
+
+.personality-btn {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px;
   background-color: #ffc107;
+  border-radius: 100px;
+  height: 34px;
+}
+
+.personality-btn:hover {
+  background-color: #477AB5;
+}
+
+.sub-text {
+  margin-top: 25px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.sub-text p {
+  padding-top: 0px;
+  color: #404040;
+  font-size: 15px;
+}
+
+.personality-choice-mobile {
+  text-align: center;
 }
 
 @media screen and (min-width: 1025px) {
@@ -128,5 +198,32 @@ p {
   }
   .main {
     width: 90%;
+  }
+}
+
+@media screen and (min-width: 846px) {
+  .personality-choice-mobile {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 845px) {
+  .personality-choice-large {
+    display: none;
+  }
+  .control-box {
+    margin-bottom: 20px;
+  }
+  .personality-btn {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    margin-left: 10px;
+    margin-right: 10px;
+    height: 25px;
+    padding: 10px;
+  }
+  .main {
+    margin-top: 50px;
   }
 }
