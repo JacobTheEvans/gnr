@@ -3,6 +3,8 @@ var bodyParser = require("body-parser");
 var path = require("path");
 var mongoose = require("mongoose");
 var hn = require("hacker-news-api");
+var Youtube = require("youtube-api");
+var config = require("./config.js");
 
 //base express app
 var app = express();
@@ -25,6 +27,12 @@ app.set("views", __dirname + "/public/views");
 app.engine("html", require("ejs").renderFile);
 app.set("view engine", "ejs");
 
+//youtube api setup
+Youtube.authenticate({
+  type: "key",
+  key: config["youtube_token"]
+});
+
 var refreshCache = function() {
   hn.story().since("past_24h").recent().top(function(error, data) {
     if(error) {
@@ -39,7 +47,9 @@ var refreshCache = function() {
         var newPost = new Post(newData[i]);
         newPost.save(function(err, result) {
           if(err) {
-            console.log(err);
+            if(err.name != "ValidationError") {
+              console.log(err);
+            }
           }
         });
       }

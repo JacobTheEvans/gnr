@@ -69,17 +69,20 @@
                     </div>
                   </div>
                   <div class="mdl-cell mdl-cell--10-col mdl-cell--12-col-tablet mdl-cell--12-col-phone">
-                    <youtube-video video-id="currentSong" player-width="'100%'" player-height="'340px'"></youtube-video>
-                    <div class="control-box">
-                      <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab control_btn">
+                    <youtube-video player="holotape" video-id="currentSong" player-width="'100%'" player-height="'340px'"></youtube-video>
+                    <div class="control-box" ng-init="setVideo(holotape)">
+                      <button ng-if="paused == false" ng-click="holotape.stopVideo();stopVideo();" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab control_btn">
                         <i class="material-icons">pause</i>
+                      </button>
+                      <button ng-if="paused == true" ng-click="holotape.playVideo();playVideo();" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab control_btn">
+                        <i class="material-icons">play_arrow</i>
                       </button>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="mdl-cell mdl-cell--4-col mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+            <div class="mdl-cell mdl-cell--4-col mdl-cell--12-col-tablet mdl-cell--12-col-phone news-l">
               <div class="news-box" ng-init="getNews()">
                 <div class="news-logo">
                   News
@@ -89,6 +92,18 @@
                     <a ng-href="{{item.url}}" target="_blank">{{item.title}}</a>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="news-m-container m-only">
+          <div class="news-box" ng-init="getNews()">
+            <div class="news-logo">
+              News
+            </div>
+            <div class="news-items">
+              <div class="news-item" ng-repeat="item in newsItems | orderBy: 'points':true  track by $index">
+                <a ng-href="{{item.url}}" target="_blank">{{item.title}}</a>
               </div>
             </div>
           </div>

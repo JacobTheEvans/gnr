@@ -60,6 +60,7 @@ a {
   margin-right: auto;
   margin-top: 100px;
   background-color: #ecebe8;
+  padding-bottom: 15px;
 }
 
 .player-box {
@@ -116,14 +117,9 @@ a {
 }
 
 .control-box {
-  position: absolute;
-  bottom: 0;
+  width: 100%;
   text-align: center;
-  left: 0;
-  right: 0;
-  margin: auto;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  margin-top: 30px;
 }
 
 .control_btn {
@@ -177,7 +173,15 @@ a {
 }
 
 .personality-choice-mobile {
+  margin-top: 10px;
   text-align: center;
+}
+
+.news-m-container {
+  margin-top: 80px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
 }
 
 @media screen and (min-width: 1025px) {
@@ -224,6 +228,9 @@ a {
     padding: 10px;
   }
   .main {
-    margin-top: 50px;
+    padding-bottom: 130px;
+  }
+  .news-l {
+    display: none;
   }
 }
