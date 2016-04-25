@@ -184,6 +184,61 @@ a {
   width: 90%;
 }
 
+.data-table {
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  text-align: left;
+}
+
+.login {
+  margin-top: 170px;
+  text-align: center;
+}
+
+.center-card  {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.index-level {
+  font-size: 20px;
+}
+
+.title-cell{
+  font-size: 14px;
+}
+
+.link-cell {
+  font-size: 20px;
+}
+
+.yellow-button {
+  color: rgb(255,215,64);
+}
+
+.add-section {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: 94%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+  background-color: white;
+  padding: 10px
+}
+
+.input-form div {
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
+.add-label {
+  margin-left: 40px;
+  color: grey;
+}
+
 @media screen and (min-width: 1025px) {
   .mdl-layout__drawer-button {
     display: none !important;
@@ -203,6 +258,7 @@ a {
   .main {
     width: 90%;
   }
+
 }
 
 @media screen and (min-width: 846px) {
@@ -230,7 +286,16 @@ a {
   .main {
     padding-bottom: 130px;
   }
+}
+
+@media screen and (max-width: 840px) {
   .news-l {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 836px) {
+  .m-news {
     display: none;
   }
 }

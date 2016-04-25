@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Galaxy News Radio | Admin</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet" type="text/css">
+  <link href="/css/mdl.css" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
+  <script src="/js/mdl.js"></script>
+</head>
+<body ng-app="app">
+  <div ng-controller="mainController">
+    <div id="loading">
+      <img class="loading-image" src="/images/gears.gif">
+      <p class="color-blue">Loading content</p>
+    </div>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer">
+      <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+          <span class="mdl-layout-title">{{dj}}</span>
+          <div class="mdl-layout-spacer"></div>
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label">
+            <label class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect" for="search-input"><i class="material-icons">search</i></label>
+            <div class="mdl-textfield__expandable-holder">
+              <input ng-model="searchText" class="mdl-textfield__input" id="search-input">
+              <label class="mdl-textfield__label">Search</label>
+            </div>
+          </div>
+        </div>
+      </header>
+      <div class="mdl-layout__drawer">
+        <span class="mdl-layout-title">Manage GNR <i class="fa fa-bolt color-yellow"></i></span>
+        <nav class="mdl-navigation">
+          <a class="mdl-navigation__link drawer_link" ng-click="setDj('Three Dog')">Three Dog</a>
+          <a class="mdl-navigation__link drawer_link" ng-click="setDj('Mr. New Vegas')">Mr. New Vegas</a>
+          <a class="mdl-navigation__link drawer_link" ng-click="setDj('Travis Lonely Miles')">Travis "Lonely" Miles</a>
+        </nav>
+      </div>
+      <main class="mdl-layout__content">
+        <div class="add-section mdl-shadow--2dp">
+          <label class="add-label">Add song</label>
+          <form action="#" class="input-form">
+            <div class="mdl-textfield mdl-js-textfield">
+              <input class="mdl-textfield__input" type="text" id="sample1">
+              <label class="mdl-textfield__label" for="sample1">Name</label>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield">
+              <input class="mdl-textfield__input" type="text" id="sample1">
+              <label class="mdl-textfield__label" for="sample1">URL</label>
+            </div>
+            <button ng-click="deletePort(port)" class="mdl-button mdl-js-button mdl-button--icon yellow-button">
+              <i class="fa fa-plus-square" aria-hidden="true"></i>
+            </button>
+          </form>
+        </div>
+        <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp data-table">
+          <thead>
+            <tr>
+              <th>Index</th>
+              <th>Name</th>
+              <th>Link</th>
+              <th>Remove</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a class="index-level" href=""><i class="fa fa-chevron-up" aria-hidden="true"></i></a> <p style="text-align: right; padding-right: 5px; padding-top: 4px; margin-bottom: -0px;">1</p> <a class="index-level" href=""><i class="fa fa-chevron-down" aria-hidden="true"></i></a></td>
+              <td class="title-cell">Crazy They Call Me</td>
+              <td class="link-cell"><a href=""><i class="fa fa-youtube-play" aria-hidden="true"></i></a></td>
+              <td>
+                <button ng-click="deletePort(port)" class="mdl-button mdl-js-button mdl-button--icon yellow-button">
+                  <i class="material-icons">delete</i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </main>
+    </div>
+  </div>
+  <script src="/js/jquery.js"></script>
+  <script src="/js/angular.min.js"></script>
+  <script src="/js/angular-cookies.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

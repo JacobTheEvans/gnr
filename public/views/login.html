@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Galaxy News Radio | Login</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet" type="text/css">
+  <link href="/css/mdl.css" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
+  <script src="/js/mdl.js"></script>
+</head>
+<body ng-app="app">
+  <div ng-controller="mainController">
+    <div id="loading">
+      <img class="loading-image" src="/images/gears.gif">
+      <p class="color-blue">Loading content</p>
+    </div>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+          <span class="mdl-layout-title l-only">GNR <i class="fa fa-bolt color-yellow"></i></span>
+          <div class="mdl-layout-spacer"></div>
+          <a class="navbar_link" href="">Playlists</a>
+          <a class="navbar_link" href="https://github.com/JacobTheEvans/gnr" target="_blank">Source Code</a>
+          <a class="navbar_link" href="https://jacobtheevans.com" target="_blank">Author</a>
+          <span class="mdl-layout-title m-only">GNR <i class="fa fa-bolt color-yellow"></i></span>
+        </div>
+      </header>
+      <div class="mdl-layout__drawer">
+        <span class="mdl-layout-title">GNR <i class="fa fa-bolt color-yellow"></i></span>
+        <nav class="mdl-navigation">
+          <a class="mdl-navigation__link drawer_link" href="">Playlists</a>
+          <a class="mdl-navigation__link drawer_link" href="https://github.com/JacobTheEvans/gnr" target="_blank">Source Code</a>
+          <a class="mdl-navigation__link drawer_link" href="https://jacobtheevans.com" target="_blank">Author</a>
+        </nav>
+      </div>
+      <main class="mdl-layout__content">
+        <div class="login">
+          <div class="center-card mdl-card mdl-shadow--6dp text-center">
+            <div class="mdl-card__supporting-text">
+              <h4 class="text-center">Welcome<br>Please Login</h4>
+              <form ng-submit="login()">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                  <input class="mdl-textfield__input" id="text-field-username" ng-model="userdata.username">
+                  <label class="mdl-textfield__label" for="text-field-username">Username</label>
+                </div>
+                <br>
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                  <input type="password" class="mdl-textfield__input" id="text-field-Password" ng-model="userdata.password">
+                  <label class="mdl-textfield__label" for="text-field-Password">Password</label>
+                </div>
+                <input type="submit" style="position: absolute; left: -9999px"/>
+              </form>
+              <div class="mdl-card__actions">
+                <a ng-click="login()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent blue-button">
+                  Login
+                </a>
+                <br>
+                <br>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="/js/jquery.js"></script>
+  <script src="/js/angular.min.js"></script>
+  <script src="/js/angular-cookies.js"></script>
+  <script src="/js/login.js"></script>
+</body>
+</html>
