@@ -48,8 +48,24 @@ var userSchema = new Schema({
   },
 });
 
+var currentSchema = new Schema({
+  index: {
+    type: Number,
+    require: true
+  },
+  dj: {
+    type: String,
+    required: true
+  },
+  time: {
+    type: Number,
+    required: true
+  }
+});
+
 module.exports = {
   Song: mongoose.model("song", songSchema),
   Post: mongoose.model("post", postSchema),
   User: mongoose.model("user", userSchema),
+  Current: mongoose.model("current", currentSchema),
 };

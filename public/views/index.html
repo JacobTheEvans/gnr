@@ -57,13 +57,13 @@
                       </div>
                     </div>
                     <div class="personality-choice-mobile">
-                      <span ng-click="">
+                      <span ng-click="setDj('Three Dog')">
                         <img class="personality-btn" src="images/dog.png">
                       </span>
-                      <span ng-click="">
+                      <span ng-click="setDj('Mr. New Vegas')">
                         <img class="personality-btn" src="images/mr.png">
                       </span>
-                      <span ng-click="">
+                      <span ng-click="setDj('Travis Lonely Miles')">
                         <img class="personality-btn" src="images/travis.png">
                       </span>
                     </div>
@@ -114,9 +114,11 @@
       </main>
     </div>
   </div>
+  <script src="/socket.io/socket.io.js"></script>
   <script src="/js/jquery.js"></script>
   <script src="/js/angular.min.js"></script>
   <script src="/js/main.js"></script>
+  <script src="/js/angular-socket.js"></script>
   <script src="https://www.youtube.com/iframe_api"></script>
   <script src="/js/angular-youtube-embed.js"></script>
 </body>

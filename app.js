@@ -3,13 +3,14 @@ var bodyParser = require("body-parser");
 var path = require("path");
 var mongoose = require("mongoose");
 var hn = require("hacker-news-api");
-var request = require("request");
-var config = require("./config.js");
 var jwt = require("jsonwebtoken");
+var config = require("./config.js");
 var bcrypt = require("bcrypt");
 
-//base express app
+//express app setup
 var app = express();
+var server = app.listen(8080);
+var io = require("socket.io")(server);
 
 //connect to mongoDB
 mongoose.connect("mongodb://localhost/gnr");
@@ -18,12 +19,14 @@ mongoose.connect("mongodb://localhost/gnr");
 var Post = require("./model.js").Post;
 var Song = require("./model.js").Song;
 var User = require("./model.js").User;
-
-//youtube api token
-var youtubeToken = config["token"];
+var Current = require("./model.js").Current;
 
 //bcrypt secret
 var secret = config["secret"];
+
+//DJ constants
+var djs = ["Three Dog", "Mr. New Vegas", "Travis Lonely Miles"];
+var updated = {};
 
 //setup JSON requests
 app.use(bodyParser.urlencoded({ extended: false}));
@@ -69,6 +72,23 @@ setInterval(function(){
   refreshCache();
 }, 1800000);
 
+
+var updateDeletedIndexs = function(dj, missingIndex) {
+  Song.find({dj: dj}, function(err, data) {
+    if(err) {
+      console.log(err);
+    }
+    if(data) {
+      for(var i = 0; i < data.length; i++) {
+        if(data[i].index > missingIndex) {
+          data[i].index -= 1;
+          data[i].save();
+        }
+      }
+    }
+  });
+}
+
 app.get("/", function(req, res) {
   res.render("index.html");
 });
@@ -84,6 +104,63 @@ app.get("/news", function(req, res) {
       res.status(404).send({pass: false, message: "No data found"});
     }
   });
+});
+
+app.post("/song", function(req, res) {
+  var pass = true;
+  if(!req.body.dj) {
+    pass = false;
+    res.status(400).send("No dj given in JSON");
+  }
+  if(req.body.index == undefined) {
+    pass = false;
+    res.status(400).send("No index given in JSON");
+  }
+  if(pass) {
+    Song.findOne({dj: req.body.dj, index: req.body.index}, function(err, data) {
+      if(err) {
+        res.status(500).send(err);
+      }
+      if(data) {
+        res.status(200).send(data);
+      } else {
+        res.status(404).send("No data found");
+      }
+    });
+  }
+});
+
+
+io.on("connection", function(socket) {
+  var connectionData = socket.request;
+  var dj = connectionData._query["dj"];
+  if(!dj) {
+    io.sockets.connected[socket.id].emit("Failed", {"message": "No DJ was found in header data"});
+  }
+  Current.findOne({dj: dj}, function(error, data) {
+    if(error) {
+      console.log(error)
+      io.sockets.connected[socket.id].emit("Failed", {"message": "Interal Database Error"});
+    }
+    if(data) {
+      io.sockets.connected[socket.id].emit("update", {"message": "Update in song and song time", "data": data});
+    } else {
+      io.sockets.connected[socket.id].emit("Failed", {"message": "No Data Found"});
+    }
+  });
+  if(updated[dj] == true) {
+    updated[dj] == false;
+    Current.findOne({dj: dj}, function(error, data) {
+      if(error) {
+        io.sockets.connected[socket.id].emit("Failed", {"message": "Interal Database Error"});
+      }
+      if(data) {
+        io.sockets.connected[socket.id].emit("update", {"message": "Update in song and song time", "data": data});
+      } else {
+        io.sockets.connected[socket.id].emit("Failed", {"message": "No Data Found"});
+      }
+    });
+  }
 });
 
 app.get("/login", function(req, res) {
@@ -132,14 +209,14 @@ app.use(function(req,res,next) {
   }
 });
 
-app.post("songs", function(req, res) {
+app.post("/songs", function(req, res) {
   var pass = true;
   if(!req.body.dj) {
     pass = false;
     res.status(400).send("No dj given in JSON");
   }
   if(pass) {
-    Song.find({}, function(err, data) {
+    Song.find({dj: req.body.dj}, function(err, data) {
       if(err) {
         res.status(500).send(err);
       }
@@ -152,7 +229,7 @@ app.post("songs", function(req, res) {
   }
 });
 
-app.post("new", function(req, res) {
+app.post("/new", function(req, res) {
   var pass = true;
   if(!req.body.name) {
     pass = false;
@@ -183,7 +260,7 @@ app.post("new", function(req, res) {
         index: largestIndex + 1,
         name: req.body.name,
         dj: req.body.dj,
-        link: req.body.link
+        url: req.body.link
       };
       newSong = new Song(newData);
       newSong.save(function(error, result) {
@@ -198,7 +275,7 @@ app.post("new", function(req, res) {
   }
 });
 
-app.post("delete", function(req, res) {
+app.post("/delete", function(req, res) {
   var pass = true;
   if(!req.body.name) {
     pass = false;
@@ -209,13 +286,15 @@ app.post("delete", function(req, res) {
     res.status(400).send("No dj given in JSON");
   }
   if(pass) {
-    Song.findOne({name: req.body.name, dj: req.body.dj}, function(req, res) {
+    Song.findOne({name: req.body.name, dj: req.body.dj}, function(err, data) {
       if(err) {
         res.status(500).send(err);
       }
       if(data) {
+        var deletedIndex = data.index;
         data.remove();
         data.save();
+        updateDeletedIndexs(req.body.dj, deletedIndex);
         res.status(200).send({success: true, message: "Item deleted"});
       } else {
         res.status(403).send({success: false, message: "No song found with these attributes"});
@@ -224,52 +303,116 @@ app.post("delete", function(req, res) {
   }
 });
 
-app.listen(8080);
+app.post("/update", function(req, res) {
+  var pass = true;
+  if(!req.body.name) {
+    pass = false;
+    res.status(400).send("No name given in JSON");
+  }
+  if(!req.body.dj) {
+    pass = false;
+    res.status(400).send("No dj given in JSON");
+  }
+  if(!req.body.typeReq) {
+    pass = false;
+    res.status(400).send("No type given in JSON");
+  }
+  if(pass) {
+    Song.findOne({name: req.body.name, dj: req.body.dj}, function(err, data) {
+      if(err) {
+        res.status(500).send(err);
+      }
+      if(data) {
+        var currentIndex = data.index;
+        var findIndex = 0;
+        if(req.body.typeReq == "add") {
+          findIndex = currentIndex + 1;
+        } else {
+          findIndex = currentIndex - 1;
+        }
+        Song.findOne({dj: req.body.dj, index: findIndex }, function(error, oldData) {
+          if(error) {
+            res.status(500).send(error);
+          }
+          if(oldData) {
+            oldIndex = oldData.index;
+            oldData.index = data.index;
+            data.index = oldIndex
+            data.save();
+            oldData.save();
+            res.status(200).send({success: true, message: "Indexes updated"});
+          } else {
+            res.status(403).send({success: false, message: "This song is already at the max index"});
+          }
+        });
+      } else {
+        res.status(403).send({success: false, message: "No song found with these attributes"});
+      }
+    });
+  }
+});
 
+var currentSetup = function() {
+  Current.find({}, function(error, data) {
+    if(error) {
+      console.log(error);
+    }
+    if(data.length != 0) {
+      console.log("[+] Data set for current songs exists resuming.");
+    } else {
+      console.log("[-] No data set for current songs exists. System is creating one.");
+      for(var i = 0; i < djs.length; i++) {
+        var newData = {
+          index: 0,
+          dj: djs[i],
+          time: 0
+        };
+        var newCurrent = new Current(newData);
+        newCurrent.save(function(err, dt) {
+          if(err) {
+            console.log(err);
+          }
+        });
+      }
+    }
+  });
+};
+currentSetup();
 
-// var convert_time = function(duration) {
-//     var a = duration.match(/\d+/g);
-//
-//     if (duration.indexOf('M') >= 0 && duration.indexOf('H') == -1 && duration.indexOf('S') == -1) {
-//         a = [0, a[0], 0];
-//     }
-//
-//     if (duration.indexOf('H') >= 0 && duration.indexOf('M') == -1) {
-//         a = [a[0], 0, a[1]];
-//     }
-//     if (duration.indexOf('H') >= 0 && duration.indexOf('M') == -1 && duration.indexOf('S') == -1) {
-//         a = [a[0], 0, 0];
-//     }
-//
-//     duration = 0;
-//
-//     if (a.length == 3) {
-//         duration = duration + parseInt(a[0]) * 3600;
-//         duration = duration + parseInt(a[1]) * 60;
-//         duration = duration + parseInt(a[2]);
-//     }
-//
-//     if (a.length == 2) {
-//         duration = duration + parseInt(a[0]) * 60;
-//         duration = duration + parseInt(a[1]);
-//     }
-//
-//     if (a.length == 1) {
-//         duration = duration + parseInt(a[0]);
-//     }
-//     var h = Math.floor(duration / 3600);
-//     var m = Math.floor(duration % 3600 / 60);
-//     var s = Math.floor(duration % 3600 % 60);
-//     return ((h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s);
-// }
-//
-// id = "TgisehuGOyY"
-// url = "https://www.googleapis.com/youtube/v3/videos?id=" + id + "&part=snippet,contentDetails&key=" + youtubeToken.toString();
-// console.log(url)
-//   request(url , function (error, response, body) {
-//       if (!error && response.statusCode == 200) {
-//           console.log(convert_time(JSON.parse(body)["items"][0]["contentDetails"]["duration"]));
-//       } else {
-//         console.log(error)
-//       }
-//   });
+//set default false state for updated
+var setupUpdates = function() {
+  for(var i = 0; i < djs.length; i++) {
+    updated[djs[i]] = false;
+  }
+};
+setupUpdates();
+
+//Interval for update of songs
+var setupIntervals = function() {
+  for(var i = 0; i < djs.length; i++) {
+    var prevIndex = 0;
+    Current.findOne({dj: djs[i]}, function(error, data) {
+      if(error) {
+        console.log(error);
+      }
+      if(data) {
+        prevIndex = data.index
+      }
+    });
+    setInterval(function(){
+      Current.findOne({dj: djs[i]}, function(error, data) {
+        if(error) {
+          console.log(error);
+        }
+        if(data) {
+          if(prevIndex != data.index) {
+            prevIndex = data.index;
+            updated[djs[i]] = true;
+          }
+        }
+      });
+     }, 1000);
+  }
+};
+
+setupIntervals();

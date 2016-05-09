@@ -44,16 +44,16 @@
       <main class="mdl-layout__content">
         <div class="add-section mdl-shadow--2dp">
           <label class="add-label">Add song</label>
-          <form action="#" class="input-form">
+          <form class="input-form">
             <div class="mdl-textfield mdl-js-textfield">
-              <input class="mdl-textfield__input" type="text" id="sample1">
+              <input class="mdl-textfield__input" type="text" ng-model="name">
               <label class="mdl-textfield__label" for="sample1">Name</label>
             </div>
             <div class="mdl-textfield mdl-js-textfield">
-              <input class="mdl-textfield__input" type="text" id="sample1">
+              <input class="mdl-textfield__input" type="text" ng-model="url">
               <label class="mdl-textfield__label" for="sample1">URL</label>
             </div>
-            <button ng-click="deletePort(port)" class="mdl-button mdl-js-button mdl-button--icon yellow-button">
+            <button ng-click="addSong()" class="mdl-button mdl-js-button mdl-button--icon yellow-button">
               <i class="fa fa-plus-square" aria-hidden="true"></i>
             </button>
           </form>
@@ -68,12 +68,12 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td><a class="index-level" href=""><i class="fa fa-chevron-up" aria-hidden="true"></i></a> <p style="text-align: right; padding-right: 5px; padding-top: 4px; margin-bottom: -0px;">1</p> <a class="index-level" href=""><i class="fa fa-chevron-down" aria-hidden="true"></i></a></td>
-              <td class="title-cell">Crazy They Call Me</td>
-              <td class="link-cell"><a href=""><i class="fa fa-youtube-play" aria-hidden="true"></i></a></td>
+            <tr ng-repeat="song in data | orderBy: 'index' track by $index">
+              <td><a class="index-level" ng-click="updateIndex(song.name, 'sub')"><i class="fa fa-chevron-up" aria-hidden="true"></i></a> <p style="text-align: right; padding-right: 5px; padding-top: 4px; margin-bottom: -0px;">{{song.index}}</p> <a class="index-level" ng-click="updateIndex(song.name, 'add')"><i class="fa fa-chevron-down" aria-hidden="true"></i></a></td>
+              <td class="title-cell">{{song.name}}</td>
+              <td class="link-cell"><a href="{{song.url}}" target="_blank"><i class="fa fa-youtube-play" aria-hidden="true"></i></a></td>
               <td>
-                <button ng-click="deletePort(port)" class="mdl-button mdl-js-button mdl-button--icon yellow-button">
+                <button ng-click="delete(song.name)" class="mdl-button mdl-js-button mdl-button--icon yellow-button">
                   <i class="material-icons">delete</i>
                 </button>
               </td>
