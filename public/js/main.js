@@ -1,4 +1,4 @@
-var app = angular.module("app", ["youtube-embed","chat.io"]);
+var app = angular.module("app", ["youtube-embed","chat.io", "ngCookies"]);
 
 app.service("news", ["$http", function($http) {
   this.getNews = function(isSuc, isFail) {
@@ -16,12 +16,15 @@ app.service("songRequest", ["$http", function($http) {
   };
 }]);
 
-app.controller("mainController", ["$scope", "news", "io", "songRequest", function($scope, news, io, songRequest) {
+app.controller("mainController", ["$scope", "news", "io", "songRequest", "$cookies", function($scope, news, io, songRequest, $cookies) {
+  $scope.dj = $cookies.get("dj");
+  if(!$scope.dj) {
+    $scope.dj = "Three Dog";
+  }
   $scope.paused = true;
   $scope.newsItems = [];
   $scope.currentSong = "";
   $scope.socket = "";
-  $scope.dj = "Three Dog";
   $scope.player = "";
   $scope.setSong = function(response) {
     $scope.currentSong = response.data.url.replace("https://www.youtube.com/watch?v=", "");
@@ -29,7 +32,7 @@ app.controller("mainController", ["$scope", "news", "io", "songRequest", functio
       $scope.player = player;
       $scope.player.seekTo($scope.time);
       $scope.player.playVideo();
-      $scope.paused = true;
+      $scope.paused = false;
     });
   };
   $scope.logError = function(response) {
@@ -62,8 +65,8 @@ app.controller("mainController", ["$scope", "news", "io", "songRequest", functio
     componentHandler.upgradeAllRegistered();
   };
   $scope.setDj = function(dj) {
-    $scope.dj = dj;
-    $scope.setupSocket();
+    $cookies.put("dj", dj);
+    window.location = "/";
   };
   setTimeout(function() {
     $scope.updateMDL();

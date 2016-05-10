@@ -22,7 +22,7 @@ def updateDj(dj, length):
         new_time = 0
         index = index + 1
 
-    if index > highestIndex:
+    if index > highestIndex - 1:
         index = 0
 
     db["currents"].update_one({"dj": dj}, {
