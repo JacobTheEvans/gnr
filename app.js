@@ -148,19 +148,23 @@ io.on("connection", function(socket) {
       io.sockets.connected[socket.id].emit("Failed", {"message": "No Data Found"});
     }
   });
-  if(updated[dj] == true) {
-    updated[dj] == false;
-    Current.findOne({dj: dj}, function(error, data) {
-      if(error) {
-        io.sockets.connected[socket.id].emit("Failed", {"message": "Interal Database Error"});
+  (function(dj, io, socket){
+    setInterval(function() {
+      if(updated[dj] == true) {
+        updated[dj] == false;
+        Current.findOne({dj: dj}, function(error, data) {
+          if(error) {
+            io.sockets.connected[socket.id].emit("Failed", {"message": "Interal Database Error"});
+          }
+          if(data) {
+            io.sockets.connected[socket.id].emit("update", {"message": "Update in song and song time", "data": data});
+          } else {
+            io.sockets.connected[socket.id].emit("Failed", {"message": "No Data Found"});
+          }
+        });
       }
-      if(data) {
-        io.sockets.connected[socket.id].emit("update", {"message": "Update in song and song time", "data": data});
-      } else {
-        io.sockets.connected[socket.id].emit("Failed", {"message": "No Data Found"});
-      }
-    });
-  }
+    }, 1000);
+  }(dj, io, socket));
 });
 
 app.get("/login", function(req, res) {
@@ -389,29 +393,31 @@ setupUpdates();
 
 //Interval for update of songs
 var setupIntervals = function() {
+  var prevIndexs = {};
   for(var i = 0; i < djs.length; i++) {
-    var prevIndex = 0;
     Current.findOne({dj: djs[i]}, function(error, data) {
       if(error) {
         console.log(error);
       }
       if(data) {
-        prevIndex = data.index
+        prevIndexs[djs[i]] = data.index;
       }
     });
-    setInterval(function(){
-      Current.findOne({dj: djs[i]}, function(error, data) {
-        if(error) {
-          console.log(error);
-        }
-        if(data) {
-          if(prevIndex != data.index) {
-            prevIndex = data.index;
-            updated[djs[i]] = true;
+    (function(index){
+      setInterval(function(){
+        Current.findOne({dj: djs[index]}, function(error, data) {
+          if(error) {
+            console.log(error);
           }
-        }
-      });
-     }, 1000);
+          if(data) {
+            if(prevIndexs[djs[index]] != data.index) {
+              prevIndexs[djs[index]] = data.index;
+              updated[djs[index]] = true;
+            }
+          }
+        });
+       }, 1000);
+    }(i));
   }
 };
 
