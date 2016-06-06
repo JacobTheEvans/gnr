@@ -23,28 +23,48 @@ app.controller("mainController", ["$scope", "news", "io", "songRequest", "$cooki
   }
   $scope.paused = true;
   $scope.newsItems = [];
+  $scope.currentIndex = 0;
   $scope.currentSong = "";
   $scope.socket = "";
   $scope.player = "";
-  $scope.setSong = function(response) {
-    $scope.currentSong = response.data.url.replace("https://www.youtube.com/watch?v=", "");
-    $scope.$on("youtube.player.ready", function ($event, player) {
-      $scope.player = player;
-      $scope.player.seekTo($scope.time);
-      $scope.player.playVideo();
-      $scope.paused = false;
-    });
-  };
   $scope.logError = function(response) {
     console.log(response.data)
   };
-  $scope.getSong = function(data) {
-    $scope.time = data["data"]["time"];
-    songRequest.getSong($scope.dj, data["data"]["index"], $scope.setSong, $scope.logError);
+  $scope.setupSongs = function(data) {
+    var indexFound = false;
+    $scope.currentIndex = data.index;
+    for(var i = 0; i < data.playlist.length; i++) {
+      if(data.playlist[i].index == data.index) {
+        $scope.currentSong = data.playlist[i].url.replace("https://www.youtube.com/watch?v=", "");
+        indexFound = true;
+        break;
+      }
+    }
+    if(!indexFound) {
+      console.log("Error song not found in given playlist");
+    }
+    $scope.$apply();
+    $scope.$on("youtube.player.ready", function ($event, player) {
+      $scope.player = player;
+      $scope.player.playVideo();
+      $scope.paused = false;
+    });
+    $scope.$on("youtube.player.ended", function($event, player) {
+      $scope.player = player;
+      if($scope.currentIndex >= data.playlist.length) {
+        $scope.currentIndex = 0;
+      } else {
+        $scope.currentIndex += 1;
+      }
+      $scope.currentSong = data.playlist[$scope.currentIndex].url.replace("https://www.youtube.com/watch?v=", "");
+      setTimeout(function() {
+        $scope.player.playVideo();
+      }, 1000);
+    });
   };
   $scope.setupSocket = function() {
     $scope.socket = io.connect($scope.dj);
-    io.getUpdate($scope.socket, $scope.getSong)
+    io.getUpdate($scope.socket, $scope.setupSongs)
   };
   $scope.stopVideo = function() {
     $scope.paused = true;

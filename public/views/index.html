@@ -24,7 +24,7 @@
         <div class="mdl-layout__header-row">
           <span class="mdl-layout-title l-only">GNR <i class="fa fa-bolt color-yellow"></i></span>
           <div class="mdl-layout-spacer"></div>
-          <a class="navbar_link" href="http://fallout.wikia.com/wiki/Fallout_3_soundtrack">Playlists</a>
+          <a class="navbar_link" href="/playlist">Playlists</a>
           <a class="navbar_link" href="https://github.com/JacobTheEvans/gnr" target="_blank">Source Code</a>
           <a class="navbar_link" href="https://jacobtheevans.com" target="_blank">Author</a>
           <span class="mdl-layout-title m-only">GNR <i class="fa fa-bolt color-yellow"></i></span>
@@ -33,7 +33,7 @@
       <div class="mdl-layout__drawer">
         <span class="mdl-layout-title">GNR <i class="fa fa-bolt color-yellow"></i></span>
         <nav class="mdl-navigation">
-          <a class="mdl-navigation__link drawer_link" href="">Playlists</a>
+          <a class="mdl-navigation__link drawer_link" href="/playlist">Playlists</a>
           <a class="mdl-navigation__link drawer_link" href="https://github.com/JacobTheEvans/gnr" target="_blank">Source Code</a>
           <a class="mdl-navigation__link drawer_link" href="https://jacobtheevans.com" target="_blank">Author</a>
         </nav>
@@ -44,8 +44,9 @@
             <div class="mdl-cell mdl-cell--8-col mdl-cell--12-col-tablet mdl-cell--12-col-phone">
               <div class="player-box">
                 <div class="mdl-grid">
-                  <div class="mdl-cell mdl-cell--2-col mdl-cell--12-col-tablet mdl-cell--12-col-phone">
-                    <div class="personality-choice personality-choice-large">
+                  <div style="background-color: white;" class="mdl-cell mdl-cell--2-col mdl-cell--12-col-tablet mdl-cell--12-col-phone">
+                    <div style="text-align: center;" class="personality-choice personality-choice-large">
+                      <p class="dj-text">DJ Selection</p>
                       <div ng-click="setDj('Three Dog')">
                         <img class="personality-btn" src="images/dog.png">
                       </div>
@@ -57,6 +58,7 @@
                       </div>
                     </div>
                     <div class="personality-choice-mobile">
+                      <p class="dj-text">DJ Selection</p>
                       <span ng-click="setDj('Three Dog')">
                         <img class="personality-btn" src="images/dog.png">
                       </span>

@@ -93,6 +93,21 @@ app.get("/", function(req, res) {
   res.render("index.html");
 });
 
+app.get("/playlist", function(req, res) {
+  Song.find({}, function(err, data) {
+    if(err) {
+      console.log(err);
+    }
+    if(data) {
+      result = [];
+      for(var i = 0; i < data.length; i++) {
+        result.push({"dj": data[i].dj, "name": data[i].name, "url": data[i].url});
+      }
+      res.status(200).send(result);
+    }
+  });
+});
+
 app.get("/news", function(req, res) {
   Post.find({}, function(err, data) {
     if(err) {
@@ -143,28 +158,13 @@ io.on("connection", function(socket) {
       io.sockets.connected[socket.id].emit("Failed", {"message": "Interal Database Error"});
     }
     if(data) {
-      io.sockets.connected[socket.id].emit("update", {"message": "Update in song and song time", "data": data});
+      Song.find({dj: dj}, function(err, songs) {
+        io.sockets.connected[socket.id].emit("update", {"message": "Update", "index": data.index, "playlist": songs});
+      });
     } else {
       io.sockets.connected[socket.id].emit("Failed", {"message": "No Data Found"});
     }
   });
-  (function(dj, io, socket){
-    setInterval(function() {
-      if(updated[dj] == true) {
-        updated[dj] == false;
-        Current.findOne({dj: dj}, function(error, data) {
-          if(error) {
-            io.sockets.connected[socket.id].emit("Failed", {"message": "Interal Database Error"});
-          }
-          if(data) {
-            io.sockets.connected[socket.id].emit("update", {"message": "Update in song and song time", "data": data});
-          } else {
-            io.sockets.connected[socket.id].emit("Failed", {"message": "No Data Found"});
-          }
-        });
-      }
-    }, 1000);
-  }(dj, io, socket));
 });
 
 app.get("/login", function(req, res) {
@@ -382,43 +382,3 @@ var currentSetup = function() {
   });
 };
 currentSetup();
-
-//set default false state for updated
-var setupUpdates = function() {
-  for(var i = 0; i < djs.length; i++) {
-    updated[djs[i]] = false;
-  }
-};
-setupUpdates();
-
-//Interval for update of songs
-var setupIntervals = function() {
-  var prevIndexs = {};
-  for(var i = 0; i < djs.length; i++) {
-    Current.findOne({dj: djs[i]}, function(error, data) {
-      if(error) {
-        console.log(error);
-      }
-      if(data) {
-        prevIndexs[djs[i]] = data.index;
-      }
-    });
-    (function(index){
-      setInterval(function(){
-        Current.findOne({dj: djs[index]}, function(error, data) {
-          if(error) {
-            console.log(error);
-          }
-          if(data) {
-            if(prevIndexs[djs[index]] != data.index) {
-              prevIndexs[djs[index]] = data.index;
-              updated[djs[index]] = true;
-            }
-          }
-        });
-       }, 1000);
-    }(i));
-  }
-};
-
-setupIntervals();

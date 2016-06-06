@@ -66,16 +66,18 @@ a {
 .player-box {
   margin-left: auto;
   margin-right: auto;
-  width: 95%;
+  width: 100%;
   height: 420px;
   position: relative;
 }
 
 .news-box {
+  margin-top: 16px;
   width: 100%;
   background: white;
-  height: 420px;
+  height: 417px;
   margin-right: 40px;
+  overflow: hidden;
 }
 
 .news-logo {
@@ -148,9 +150,9 @@ a {
   text-align: center;
   margin-top: 20px;
   margin-bottom: 20px;
-  margin-left: auto;
   margin-right: auto;
-  padding: 20px;
+  margin-left: auto;
+  padding: 15px;
   background-color: #ffc107;
   border-radius: 100px;
   height: 34px;
@@ -173,7 +175,6 @@ a {
 }
 
 .personality-choice-mobile {
-  margin-top: 10px;
   text-align: center;
 }
 
@@ -237,6 +238,15 @@ a {
 .add-label {
   margin-left: 40px;
   color: grey;
+}
+
+.dj-text {
+  font-size: 16px;
+  text-align: center;
+  color: white;
+  background-color: #404040;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 
 @media screen and (min-width: 1025px) {
